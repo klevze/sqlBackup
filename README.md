@@ -28,6 +28,9 @@
 - **Remote Uploads:**  
   Optionally upload backups to a remote server using SFTP, FTP, or SCP with configurable scheduling (daily, first day, last day, specific weekday, or a numeric day of the month).
 
+- **Wildcard Support for Ignored Databases:**  
+  Use wildcard patterns (e.g., `projekti_*`) in `ignored_databases` to skip databases by name pattern.
+
 - **Modular & Maintainable:**  
   Code is organized into multiple modules (configuration, backup logic, notifications, remote upload) for easier maintenance and extensibility.
 
@@ -49,14 +52,16 @@
 
 ### Prerequisites
 
-- **Python 3.6+** is required.
-- Install the necessary Python packages using pip:
-  ```bash
-  pip install requests paramiko twilio
-  ```
-  - `requests`: For HTTP requests (used in notifications and remote uploads).
-  - `paramiko`: For SFTP uploads.
-  - `twilio`: For sending SMS notifications.
+1. **Python 3.6+** is required.
+2. **MySQL or MariaDB** client tools installed (e.g., `mysql`, `mysqldump`).
+3. Install the necessary Python packages using `pip`:
+   ```bash
+   pip install requests paramiko twilio fnmatch 
+   ```
+   - `requests`: For HTTP requests (used in notifications and remote uploads).
+   - `paramiko`: For SFTP uploads.
+   - `twilio`: For sending SMS notifications.
+   - `fnmatch`: For wildcard support
 
 ### Setup
 
@@ -80,12 +85,20 @@
        └── remote_upload.py  # Remote upload functionality
    ```
 
-3. **Configure the Project:**
-   - **Important:** Do not modify `config.ini.default` directly. Instead, copy it to create your local configuration file:
+3. **Configuration File Setup:**
+   - **Important:** Do not modify `config.ini.default` directly. Instead, copy it:
      ```bash
      cp config.ini.default config.ini
      ```
    - Open `config.ini` and adjust the settings to match your environment (e.g., MySQL credentials, notification channel settings, remote upload settings, etc.).
+
+   > **Note:** If you pull new changes from this repo in the future, your local `config.ini` will remain untouched, preserving your production settings.
+
+4. **(Optional) Unit Tests:**
+   - If you want to run the included unit tests (if any), install `unittest` (bundled with Python), plus any additional test dependencies, and run:
+     ```bash
+     python3 -m unittest discover
+     ```
 
 ## Configuration Tutorial
 
@@ -101,6 +114,7 @@ The `config.ini` file is the central configuration file for **sqlBackup**. It is
 - **mysql_path:** Path to the MySQL client.
 - **mysqldump_path:** Path to the mysqldump utility.
 - **ignored_databases:** Comma-separated list of databases to skip.
+  - **Now supports wildcards:** e.g. `sys, mysql, projekti_*`. Any database name matching `projekti_*` will be ignored (e.g., `projekti_alpha`, `projekti_1`).
 
 ### [telegram]
 - **enabled:** Enable or disable Telegram notifications.
@@ -142,7 +156,7 @@ The `config.ini` file is the central configuration file for **sqlBackup**. It is
 ### [export]
 - **include_routines:** Include stored procedures and functions.
 - **include_events:** Include scheduled events.
-- **column_statistics:** If set to false, the script will add `--column-statistics=0` to the dump command.
+- **column_statistics:** If set to false, the script adds `--column-statistics=0` to the dump command (helpful for older servers).
 
 ### [remote]
 - **upload_enabled:** Enable or disable remote upload of backups.
@@ -162,7 +176,7 @@ python3 main.py
 ```
 
 The script will:
-- Connect to MySQL and dump databases (skipping those in `ignored_databases`).
+- Connect to MySQL and dump databases (skipping those in `ignored_databases`, including wildcards).
 - Archive each dump according to the specified format.
 - Display a summary table with database name, backup status, elapsed time, dump size, and archive size.
 - Send notifications via the enabled channels.

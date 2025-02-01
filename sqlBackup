@@ -13,7 +13,7 @@ from src.remote_upload import upload_backups
 
 def main():
     config = load_config()
-    
+        
     # Run backups and get summary.
     errors, summary = run_backups(config)
     if errors:
