@@ -7,6 +7,7 @@ import tempfile
 import time
 import threading
 from itertools import cycle
+from fnmatch import fnmatch
 
 from .config import CONFIG
 
@@ -20,7 +21,8 @@ RESET = "\033[0m"
 # --- Configuration Variables ---
 BACKUP_DIR = CONFIG.get("backup", "backup_dir")
 ARCHIVE_FORMAT = CONFIG.get("backup", "archive_format").lower()
-IGNORED_DATABASES = set(x.strip() for x in CONFIG.get("mysql", "ignored_databases").split(','))
+# Split, then strip whitespace from each pattern
+IGNORED_DB_PATTERNS = [p.strip() for p in CONFIG.get("mysql", "ignored_databases").split(",")]
 MYSQL = CONFIG.get("mysql", "mysql_path")
 MYSQLDUMP = CONFIG.get("mysql", "mysqldump_path")
 TIMESTAMP = datetime.datetime.now().strftime("%F")
@@ -63,7 +65,7 @@ def format_size(size: int) -> str:
         return f"{size / (1024 * 1024 * 1024):.1f} GB"
 
 def create_temp_mysql_config() -> str:
-    """Create a temporary MySQL client config file from the [mysql] section."""
+    from .config import CONFIG
     tmp = tempfile.NamedTemporaryFile(mode="w", delete=False)
     tmp.write("[client]\n")
     tmp.write(f"user = {CONFIG.get('mysql', 'user')}\n")
@@ -103,6 +105,16 @@ def get_all_databases() -> list:
     except subprocess.CalledProcessError as e:
         print(f"{RED}Error retrieving databases: {e.stderr}{RESET}")
         sys.exit(1)
+
+def is_ignored(db_name: str) -> bool:
+    """
+    Return True if db_name matches any of the patterns in IGNORED_DB_PATTERNS.
+    We use fnmatch to support wildcards (like projekti_*).
+    """
+    for pattern in IGNORED_DB_PATTERNS:
+        if fnmatch(db_name, pattern):
+            return True
+    return False
 
 def backup_database(db: str) -> tuple:
     """
@@ -248,18 +260,22 @@ def run_backups(config) -> tuple:
     databases = get_all_databases()
     errors = []
     summary_lines = []
+    
     print_table_header()
     for db in databases:
-        if db in IGNORED_DATABASES:
+        if is_ignored(db):
             print_table_row(db, "Skipped", "-", "-", "-")
             continue
+
         start = time.time()
         status, dump_size, archive_size = backup_database(db)
         elapsed = f"{time.time() - start:.1f}"
         if status == "Error":
             errors.append(db)
+        
         print_table_row(db, status, elapsed, dump_size, archive_size)
         summary_lines.append(f"{db}: {status} in {elapsed}s")
+    
     separator = f"|{'-'*27}|{'-'*17}|{'-'*12}|{'-'*14}|{'-'*16}|"
     print(separator)
     summary = "\n".join(summary_lines)

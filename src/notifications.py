@@ -48,19 +48,20 @@ def send_email_notification(config, message: str) -> None:
         except Exception as e:
             print(f"{RED}Email notification failed: {e}{RESET}")
 
-def send_slack_notification(config, message: str) -> None:
+def send_slack_notification(config, message):
     if config.has_section("slack") and config.getboolean("slack", "enabled", fallback=False):
         webhook_url = config.get("slack", "webhook_url")
         try:
             payload = {"text": message}
+            # Note: use json=payload, not data=payload
             response = requests.post(webhook_url, json=payload)
             if response.status_code != 200:
-                print(f"{RED}Slack notification failed: {response.text}{RESET}")
+                print(f"Slack notification failed: {response.text}")
             else:
-                print(f"{BLUE}Slack notification sent.{RESET}")
+                print("Slack notification sent.")
         except Exception as e:
-            print(f"{RED}Slack notification error: {e}{RESET}")
-
+            print(f"Slack notification error: {e}")
+            
 def send_sms_notification(config, message: str) -> None:
     if config.has_section("sms") and config.getboolean("sms", "enabled", fallback=False):
         try:
