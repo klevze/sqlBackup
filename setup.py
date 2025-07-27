@@ -39,7 +39,7 @@ setup(
     long_description=read_readme(),
     long_description_content_type='text/markdown',
     author='Gregor',
-    author_email='your.email@example.com',  # Update to your real email or leave blank if you prefer
+    author_email='gregor@klevze.com',
     url='https://github.com/klevze/sqlBackup',
     
     # Package discovery
