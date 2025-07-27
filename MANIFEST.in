@@ -1,0 +1,23 @@
+# Include important project files
+include README.md
+include LICENSE
+include requirements.txt
+include requirements-dev.txt
+include config.ini.default
+include install.sh
+include install.bat
+include example.py
+include test_logging.py
+
+# Include all source files
+recursive-include src *.py
+
+# Include test files
+recursive-include tests *.py
+
+# Exclude unnecessary files
+exclude *.pyc
+exclude .gitignore
+exclude .git/*
+global-exclude __pycache__
+global-exclude *.py[co]

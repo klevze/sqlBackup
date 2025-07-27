@@ -1,0 +1,8 @@
+# Core dependencies for sqlBackup
+requests>=2.25.0
+paramiko>=2.7.0
+twilio>=7.0.0
+
+# Development dependencies (optional, for testing)
+# Uncomment the following line if you want to include pytest for testing
+# pytest>=6.0.0

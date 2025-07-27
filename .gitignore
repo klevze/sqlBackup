@@ -170,5 +170,35 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-.vscode
+# VS Code settings
+.vscode/
+
+# Local configuration file (should not be committed)
 config.ini
+
+# Log files and directories
+logs/
+*.log
+
+# Backup files created by the application
+backups/
+*.sql
+*.sql.gz
+*.sql.xz
+*.tar.xz
+*.zip
+*.rar
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Package build artifacts
+sql_backup.egg-info/
+build/
+dist/

@@ -1,0 +1,21 @@
+# Development dependencies for sqlBackup
+# Include all production dependencies
+-r requirements.txt
+
+# Testing frameworks
+pytest>=6.0.0
+pytest-cov>=2.10.0
+
+# Code quality tools
+flake8>=3.8.0
+black>=21.0.0
+isort>=5.0.0
+
+# Documentation tools
+sphinx>=3.0.0
+sphinx-rtd-theme>=0.5.0
+
+# Development utilities
+setuptools>=50.0.0
+wheel>=0.36.0
+twine>=3.0.0
