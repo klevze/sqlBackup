@@ -33,13 +33,13 @@ def read_requirements():
     return requirements
 
 setup(
-    name='sql-backup',
+    name='sqlBackup',  # Use this name for pip install sqlBackup
     version='1.0.0',
     description='A modern Python-based backup tool for MySQL databases',
     long_description=read_readme(),
     long_description_content_type='text/markdown',
     author='Gregor',
-    author_email='',  # Add email if desired
+    author_email='your.email@example.com',  # Update to your real email or leave blank if you prefer
     url='https://github.com/klevze/sqlBackup',
     
     # Package discovery
@@ -58,7 +58,7 @@ setup(
             'sql-backup=sql_backup:cli_main',
             'sqlbackup=sql_backup:cli_main',  # Alternative name for backward compatibility
         ],
-    },
+    },  # Make sure sql_backup.cli_main exists and is importable
     
     # Include the main script (deprecated - using entry_points instead)
     # scripts=['sqlBackup'],
