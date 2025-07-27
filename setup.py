@@ -34,11 +34,11 @@ def read_requirements():
 
 setup(
     name='sqlBackup',  # Use this name for pip install sqlBackup
-    version='1.0.0',
+    version='0.2.2',
     description='A modern Python-based backup tool for MySQL databases',
     long_description=read_readme(),
     long_description_content_type='text/markdown',
-    author='Gregor',
+    author='GK',
     author_email='gregor@klevze.com',
     url='https://github.com/klevze/sqlBackup',
     
