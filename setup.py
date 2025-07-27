@@ -38,7 +38,7 @@ setup(
     description='A modern Python-based backup tool for MySQL databases',
     long_description=read_readme(),
     long_description_content_type='text/markdown',
-    author='GK',
+    author='Gregor',
     author_email='gregor@klevze.com',
     url='https://github.com/klevze/sqlBackup',
     
