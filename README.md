@@ -86,97 +86,124 @@
 1. **Python 3.6+** is required.
 2. **MySQL or MariaDB** client tools installed (e.g., `mysql`, `mysqldump`).
 
-### Setup
+### Step-by-Step Installation (Debian 11 Example)
 
-1. **Clone the Repository:**
+1. **Install Python 3 and pip**
+
+   ```bash
+   sudo apt update
+   sudo apt install python3 python3-pip
+   ```
+
+2. **Clone or copy the sqlBackup project**
+
    ```bash
    git clone https://github.com/klevze/sqlBackup.git
    cd sqlBackup
    ```
 
-2. **Install the Package:**
-   
-   **Option 1: Production installation (Recommended)**
+3. **Install dependencies**
+
    ```bash
-   pip install .
-   ```
-   
-   **Option 2: Development installation**
-   ```bash
-   pip install -e .
-   ```
-   
-   **Option 3: Quick install scripts**
-   
-   For Linux/macOS:
-   ```bash
-   chmod +x install.sh
-   ./install.sh
-   ```
-   
-   For Windows:
-   ```batch
-   install.bat
-   ```
-   
-   **Option 4: Manual dependency installation**
-   ```bash
-   pip install -r requirements.txt
+   pip3 install -r requirements.txt
    ```
 
-   **Required dependencies:**
-   - `requests`: For HTTP requests (used in notifications and remote uploads).
-   - `paramiko`: For SFTP uploads.
-   - `twilio`: For sending SMS notifications.
+4. **Copy and edit the configuration file**
 
-3. **Project Structure:**
-   The project is organized as a modern Python package:
-
-   ```text
-   sqlBackup/
-   ├── setup.py              # Package installation and metadata
-   ├── requirements.txt      # Runtime dependencies
-   ├── requirements-dev.txt  # Development dependencies
-   ├── config.ini.default    # Default configuration template
-   ├── example.py            # Usage examples
-   ├── validate_config.py    # Standalone validation tool
-   ├── sql_backup/           # Main package
-   │   ├── __init__.py       # Package initialization
-   │   ├── __main__.py       # Module execution support
-   │   ├── main.py           # Application entry point
-   │   ├── backup.py         # Database backup functionality
-   │   ├── config.py         # Configuration management
-   │   ├── config_validator.py # Configuration validation
-   │   ├── logger.py         # Logging system
-   │   ├── notifications.py  # Multi-channel notifications
-   │   └── remote_upload.py  # Remote upload capabilities
-   ├── tests/                # Comprehensive test suite
-   │   └── test_*.py         # Individual test modules
-   └── docs/                 # Complete documentation
-       ├── API.md            # API reference
-       ├── DEVELOPER_GUIDE.md # Development guide
-       ├── EXAMPLES.md       # Code examples
-       └── TUTORIALS.md      # User tutorials
+   ```bash
+   cp config.ini.default config.ini
+   nano config.ini
    ```
 
-3. **Configuration File Setup:**
-   - **Important:** Do not modify `config.ini.default` directly. Instead, copy it:
+   Edit `config.ini` to match your environment (database credentials, backup paths, notification settings, remote upload, etc.).
+
+   **Important:** Update any placeholder paths (e.g., `[remote].key_file`) to real files on your server.
+
+5. **(Optional) Install as a package**
+
+   - For development:
 
      ```bash
-     cp config.ini.default config.ini
+     pip3 install -e .
      ```
 
-   - Open `config.ini` and adjust the settings to match your environment (e.g., MySQL credentials, notification channel settings, remote upload settings, etc.).
-
-   > **Note:** If you pull new changes from this repo in the future, your local `config.ini` will remain untouched, preserving your production settings.
-
-4. **(Optional) Unit Tests:**
-   - If you want to run the included unit tests, you can install development dependencies and run:
+   - For production:
 
      ```bash
-     pip install -r requirements-dev.txt
-     python3 -m unittest discover
+     pip3 install .
      ```
+
+6. **Run sqlBackup**
+
+   - From the project directory:
+
+     ```bash
+     python3 -m sql_backup
+     ```
+
+   - Or, if installed as a package:
+
+     ```bash
+     sql-backup
+     ```
+
+**Tip:** If you see an error about a missing private key or other file, check your `config.ini` paths.
+
+---
+
+**Alternative installation options:**
+
+- **Quick install script (Linux/macOS):**
+
+  ```bash
+  chmod +x install.sh
+  ./install.sh
+  ```
+
+- **Windows:**
+
+  ```batch
+  install.bat
+  ```
+
+**Required dependencies:**
+
+- `requests`: For HTTP requests (used in notifications and remote uploads).
+- `paramiko`: For SFTP uploads.
+- `twilio`: For sending SMS notifications.
+
+---
+
+**Project Structure:**
+
+The project is organized as a modern Python package:
+
+```text
+sqlBackup/
+├── setup.py              # Package installation and metadata
+├── requirements.txt      # Runtime dependencies
+├── requirements-dev.txt  # Development dependencies
+├── config.ini.default    # Default configuration template
+├── example.py            # Usage examples
+├── validate_config.py    # Standalone validation tool
+├── sql_backup/           # Main package
+│   ├── __init__.py       # Package initialization
+│   ├── __main__.py       # Module execution support
+│   ├── main.py           # Application entry point
+│   ├── backup.py         # Database backup functionality
+│   ├── config.py         # Configuration management
+│   ├── config_validator.py # Configuration validation
+│   ├── logger.py         # Logging system
+│   ├── notifications.py  # Multi-channel notifications
+│   └── remote_upload.py  # Remote upload capabilities
+├── tests/                # Comprehensive test suite
+│   └── test_*.py         # Individual test modules
+└── docs/                 # Complete documentation
+    ├── API.md            # API reference
+    ├── DEVELOPER_GUIDE.md # Development guide
+    ├── EXAMPLES.md       # Code examples
+    └── TUTORIALS.md      # User tutorials
+```
 
 ## Logging
 

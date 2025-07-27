@@ -283,11 +283,12 @@ class TestNotificationConfig(unittest.TestCase):
         self.assertEqual(notification_config.config, config)
     
     def test_notification_config_slack_valid(self):
-        """Test NotificationConfig with valid Slack configuration."""
+        """Test NotificationConfig with valid Slack configuration (uses dummy URL, not a real secret)."""
         config = {
-            'slack_webhook_url': 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+            # Dummy value, not a real Slack webhook
+            'slack_webhook_url': 'https://hooks.slack.com/services/FAKE/WEBHOOK/URL'
         }
-        
+
         # Should not raise exception
         notification_config = NotificationConfig(config)
         self.assertEqual(notification_config.config, config)
